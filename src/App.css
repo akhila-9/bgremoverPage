@@ -1,0 +1,123 @@
+.primary-btn,
+.secondary-btn,
+.cancel-btn,
+.download-btn {
+  padding: 10px 20px;
+  margin: 8px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.primary-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.secondary-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.download-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Center download button */
+.download-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Loading Spinner */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 6px solid #007bff;
+  border-top: 6px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.processing-msg {
+  color: #333;
+  font-weight: bold;
+  margin-top: 10px;
+  animation: fadeBlink 1.5s infinite ease-in-out;
+}
+
+@keyframes fadeBlink {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+/* URL input section */
+.url-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.url-input input {
+  width: 80%;
+  max-width: 400px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+body{
+margin:0px;
+}
+
+.url-btns {
+  display: flex;
+  gap: 10px;
+}
+
+/* Centered images */
+.image-section {
+  display: flex;
+  gap: 40px;
+  margin-top: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  text-align: center;
+}

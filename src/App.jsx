@@ -39,6 +39,12 @@ function App() {
     a.download = "no-background.png";
     a.click();
   };
+  const UploadImage=()=>{
+   setProcessedImage(false);
+   setIsLoading(false);
+   setShowUrlInput(false);
+   setOriginalImage(null)
+  }
 
   const handleUploadClick = () => {
     fileInputRef.current.click();
@@ -184,6 +190,7 @@ function App() {
             >
               Cancel
             </button>
+             
           </div>
         </div>
       )}
@@ -207,6 +214,13 @@ function App() {
                 disabled={isLoading}
               >
                 ⬇️ Download PNG
+              </button>
+              <button
+                className="Upload-btn"
+                onClick={UploadImage}
+             disabled={isLoading}
+              >
+              ⬇️ Upload New Image
               </button>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { removeBackground } from "@imgly/background-removal";
 import {
   ButtonGroup,
@@ -10,6 +10,19 @@ import {
   UploadText,
 } from "./App.styled";
 import "./App.css";
+function base64ToBlob(base64) {
+  const [metadata, base64Data] = base64.split(",");
+  const mime = metadata.match(/:(.*?);/)[1];
+
+  const binary = atob(base64Data);
+  const array = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i++) {
+    array[i] = binary.charCodeAt(i);
+  }
+
+  return new Blob([array], { type: mime });
+}
 
 function App() {
   const [originalImage, setOriginalImage] = useState(null);
@@ -71,6 +84,33 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const handleMessage = async (event) => {
+      console.log(event, "fgr");
+      if (event.data?.type === "IMAGE_FROM_CONTEXT_MENU") {
+        setOriginalImage(event.data.payload);
+        setIsLoading(true);
+
+        try {
+          const blob = base64ToBlob(event.data.payload);
+          const resultBlob = await removeBackground(blob);
+          const outputUrl = URL.createObjectURL(resultBlob);
+          setProcessedImage(outputUrl);
+        } catch (error) {
+          console.error("Failed to remove background:", error);
+          alert("Background removal failed. Check console.");
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => {
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [originalImage]);
+
   return (
     <Container>
       <Title>Background Removal</Title>
@@ -78,7 +118,9 @@ function App() {
       {isLoading && (
         <div className="loading">
           <div className="spinner" />
-          <p className="processing-msg">🔄 Please wait, image is processing...</p>
+          <p className="processing-msg">
+            🔄 Please wait, image is processing...
+          </p>
         </div>
       )}
 
@@ -89,10 +131,18 @@ function App() {
             Drag & drop an image here, paste it, or click to select
           </UploadText>
           <ButtonGroup>
-            <button className="primary-btn" onClick={handleUploadClick} disabled={isLoading}>
+            <button
+              className="primary-btn"
+              onClick={handleUploadClick}
+              disabled={isLoading}
+            >
               Upload Image
             </button>
-            <button className="secondary-btn" onClick={() => setShowUrlInput(true)} disabled={isLoading}>
+            <button
+              className="secondary-btn"
+              onClick={() => setShowUrlInput(true)}
+              disabled={isLoading}
+            >
               Use Image URL
             </button>
           </ButtonGroup>
@@ -117,10 +167,21 @@ function App() {
             disabled={isLoading}
           />
           <div className="url-btns">
-            <button className="primary-btn" onClick={handleUrlSubmit} disabled={isLoading}>
+            <button
+              className="primary-btn"
+              onClick={handleUrlSubmit}
+              disabled={isLoading}
+            >
               Submit
             </button>
-            <button className="cancel-btn" onClick={() => { setShowUrlInput(false); setImageUrl(""); }} disabled={isLoading}>
+            <button
+              className="cancel-btn"
+              onClick={() => {
+                setShowUrlInput(false);
+                setImageUrl("");
+              }}
+              disabled={isLoading}
+            >
               Cancel
             </button>
           </div>
@@ -140,7 +201,11 @@ function App() {
             <h3>Removed Background</h3>
             <img src={processedImage} alt="Processed" width="300" />
             <div className="download-container">
-              <button className="download-btn" onClick={handleDownload} disabled={isLoading}>
+              <button
+                className="download-btn"
+                onClick={handleDownload}
+                disabled={isLoading}
+              >
                 ⬇️ Download PNG
               </button>
             </div>

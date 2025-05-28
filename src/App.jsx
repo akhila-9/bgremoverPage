@@ -220,7 +220,7 @@ function App() {
                 onClick={UploadImage}
              disabled={isLoading}
               >
-              ⬇️ Upload New Image
+            ⬆️  Upload New Image
               </button>
             </div>
           </div>
